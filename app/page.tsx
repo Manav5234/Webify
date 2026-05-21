@@ -1466,17 +1466,21 @@ ${code.html}
       <div className={`h-screen flex flex-col bg-gray-50 dark:bg-gray-900 ${isFullscreen ? "fixed inset-0 z-50" : ""}`}>
         {/* Header */}
         <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-4">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-            <div className="flex flex-wrap items-center gap-2">
+         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-3 w-full">
+           <div className="flex flex-wrap items-center gap-2 w-full lg:w-auto">
               <Link href="/" className="flex items-center gap-2 cursor-pointer">
                 <Code2 className="w-6 h-6 text-blue-600" />
                 <h1 className="text-xl font-bold text-gray-900 dark:text-white">Webify</h1>
               </Link>
 
               <Select onValueChange={(value) => loadTemplate(templates.find((t) => t.id === value)!)}>
-                <SelectTrigger className="w-36 sm:w-48">
-                  <SelectValue placeholder="Choose template" />
-                </SelectTrigger>
+           <SelectTrigger className="w-[200px] sm:w-[210px] md:w-[240px] max-w-full min-w-0 overflow-hidden">
+ <div className="flex items-center overflow-hidden min-w-0 w-full">
+  <span className="truncate block w-full">
+    <SelectValue placeholder="Choose template" />
+  </span>
+</div>
+</SelectTrigger>
                 <SelectContent>
                   {templates.map((template) => (
                     <SelectItem key={template.id} value={template.id}>
@@ -1570,87 +1574,109 @@ ${code.html}
 
         {/* Main Content */}
 
-       <div
+    <div
   ref={containerRef}
-  className="flex-1 flex overflow-hidden"
- 
+  className="flex-1 flex flex-col lg:flex-row overflow-hidden"
 >
 
-{/* CODE EDITOR */}
-{(layout === "code" || layout === "split") && (
-  <div
-    style={{ width: layout === "split" ? `${editorWidth}%` : "100%" }}
-    className="flex flex-col border-r border-gray-200 dark:border-gray-700"
-  >
-    <Tabs
-      value={activeTab}
-      onValueChange={(value) => setActiveTab(value as keyof CodeContent)}
-      className="flex-1 flex flex-col"
+  {/* CODE EDITOR */}
+  {(layout === "code" || layout === "split") && (
+    <div
+      className={`flex flex-col border-gray-200 dark:border-gray-700
+      min-h-[50vh] lg:min-h-0 w-full overflow-hidden ${
+        layout === "split" ? "lg:w-1/2 lg:border-r" : "w-full"
+      }`}
     >
-      {/* Tabs Header */}
-      <div className="bg-white dark:bg-gray-800 border-b px-4">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="html">HTML</TabsTrigger>
-          <TabsTrigger value="css">CSS</TabsTrigger>
-          <TabsTrigger value="javascript">JS</TabsTrigger>
-        </TabsList>
-      </div>
+      <Tabs
+        value={activeTab}
+        onValueChange={(value) =>
+          setActiveTab(value as keyof CodeContent)
+        }
+        className="flex-1 flex flex-col overflow-hidden"
+      >
 
-      {/* Tabs Content */}
-      <div className="flex-1">
-        <TabsContent value="html" className="h-full m-0">
-          <MonacoEditor
-            language="html"
-            value={code.html}
-            onChange={(value) => handleCodeChange("html", value)}
-            theme={theme}
-            onEditorReady={(ed) => (activeEditorRef.current = ed)}
-          />
-        </TabsContent>
+        {/* Tabs Header */}
+        <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-2 sm:px-4">
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="html">HTML</TabsTrigger>
+            <TabsTrigger value="css">CSS</TabsTrigger>
+            <TabsTrigger value="javascript">JS</TabsTrigger>
+          </TabsList>
+        </div>
 
-        <TabsContent value="css" className="h-full m-0">
-          <MonacoEditor
-            language="css"
-            value={code.css}
-            onChange={(value) => handleCodeChange("css", value)}
-            theme={theme}
-            onEditorReady={(ed) => (activeEditorRef.current = ed)}
-          />
-        </TabsContent>
+        {/* Tabs Content */}
+        <div className="flex-1 overflow-hidden">
+          <TabsContent value="html" className="h-full m-0">
+            <MonacoEditor
+              language="html"
+              value={code.html}
+              onChange={(value) =>
+                handleCodeChange("html", value)
+              }
+              theme={theme}
+              onEditorReady={(ed) =>
+                (activeEditorRef.current = ed)
+              }
+            />
+          </TabsContent>
 
-        <TabsContent value="javascript" className="h-full m-0">
-          <MonacoEditor
-            language="javascript"
-            value={code.javascript}
-            onChange={(value) => handleCodeChange("javascript", value)}
-            theme={theme}
-            onEditorReady={(ed) => (activeEditorRef.current = ed)}
-          />
-        </TabsContent>
-      </div>
-    </Tabs>
-  </div>
-)}
+          <TabsContent value="css" className="h-full m-0">
+            <MonacoEditor
+              language="css"
+              value={code.css}
+              onChange={(value) =>
+                handleCodeChange("css", value)
+              }
+              theme={theme}
+              onEditorReady={(ed) =>
+                (activeEditorRef.current = ed)
+              }
+            />
+          </TabsContent>
 
-  {/* 🔥 RESIZE DIVIDER */}
-  {layout === "split" && (
-   <div
-  onMouseDown={handleMouseDown}
-  onDragStart={(e) => e.preventDefault()}
-  className="w-2 cursor-col-resize bg-gray-300 dark:bg-gray-600 hover:bg-blue-500 active:bg-blue-600 transition"
-style={{ minWidth: "8px" }}
-/>
+          <TabsContent value="javascript" className="h-full m-0">
+            <MonacoEditor
+              language="javascript"
+              value={code.javascript}
+              onChange={(value) =>
+                handleCodeChange("javascript", value)
+              }
+              theme={theme}
+              onEditorReady={(ed) =>
+                (activeEditorRef.current = ed)
+              }
+            />
+          </TabsContent>
+        </div>
+      </Tabs>
+    </div>
   )}
 
-  {/* PREVIEW */}
+  {/* RESIZER - DESKTOP ONLY */}
+  {layout === "split" && (
+    <div
+      onMouseDown={handleMouseDown}
+      onDragStart={(e) => e.preventDefault()}
+      className="hidden lg:block w-2 cursor-col-resize bg-gray-300 dark:bg-gray-600 hover:bg-blue-500 active:bg-blue-600 transition"
+      style={{ minWidth: "8px" }}
+    />
+  )}
+
+  {/* PREVIEW PANEL */}
   {(layout === "preview" || layout === "split") && (
     <div
-      style={{ width: layout === "split" ? `${100 - editorWidth}%` : "100%" }}
-      className="flex flex-col"
+      className={`flex flex-col bg-white dark:bg-gray-900
+      min-h-[50vh] lg:min-h-0 w-full overflow-hidden ${
+        layout === "split" ? "lg:w-1/2" : "w-full"
+      }`}
     >
-      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-3 flex items-center justify-between">
+
+      {/* Preview Header */}
+      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-2 sm:p-3 flex flex-wrap items-center justify-between gap-2">
+
         <div className="flex flex-wrap items-center gap-2">
           <Play className="w-4 h-4 text-green-600" />
+
           <span className="font-medium text-gray-900 dark:text-white">
             Live Preview
           </span>
@@ -1672,23 +1698,27 @@ style={{ minWidth: "8px" }}
               Run
             </Button>
           )}
-
         </div>
       </div>
 
-      <div className={`flex-1 bg-white ${isResizing ? "pointer-events-none" : ""}`}>
+      {/* Preview Iframe */}
+      <div
+        className={`flex-1 min-h-[50vh] lg:min-h-0 bg-white dark:bg-gray-900 ${
+          isResizing ? "pointer-events-none" : ""
+        }`}
+      >
         <iframe
           ref={previewRef}
-          className={`w-full h-full border-0 ${isResizing ? "pointer-events-none" : ""}`}
+          className={`w-full h-full border-0 ${
+            isResizing ? "pointer-events-none" : ""
+          }`}
           title="Live Preview"
           sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"
         />
       </div>
     </div>
   )}
-
 </div>
-      </div>
-    </>
-  )
-}
+</div>
+</>
+  )}
