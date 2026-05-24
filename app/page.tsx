@@ -1547,7 +1547,7 @@ export default function CodeEditor() {
   // use effect for handling full screen mode
   useEffect(() => {
     const handleFullscreenChange = () => {
-      setIsFullscreen(!!document.fullscreenElement);
+      setIsFullscreen(Boolean(document.fullscreenElement));
     };
 
     document.addEventListener("fullscreenchange", handleFullscreenChange);
@@ -1558,13 +1558,24 @@ export default function CodeEditor() {
 
   const handleFullscreenToggle = async () => {
     try {
-      if (!document.fullscreenElement) {
-        await document.documentElement.requestFullscreen();
-      } else {
+      if (document.fullscreenElement) {
         if (document.exitFullscreen) {
           await document.exitFullscreen();
         }
+        return;
       }
+
+      if (isFullscreen) {
+        setIsFullscreen(false);
+        return;
+      }
+
+      if (containerRef.current?.requestFullscreen) {
+        await containerRef.current.requestFullscreen();
+        return;
+      }
+
+      setIsFullscreen(true);
     } catch (err) {
       console.error("Error attempting to toggle fullscreen:", err);
       setIsFullscreen((prev) => !prev);
