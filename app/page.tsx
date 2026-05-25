@@ -1481,11 +1481,8 @@ ${code.html}
                   {templates.map((template) => (
                     <SelectItem key={template.id} value={template.id}>
                       <div className="flex items-center gap-2">
-                        {template.icon}
-                        <div>
-                          <div className="font-medium">{template.name}</div>
-                          <div className="text-xs text-gray-500">{template.description}</div>
-                        </div>
+                        <span className="flex items-center shrink-0">{template.icon}</span>
+                        <span>{template.name}</span>
                       </div>
                     </SelectItem>
                   ))}
