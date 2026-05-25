@@ -1030,6 +1030,7 @@ export default function CodeEditor() {
   const [theme, setTheme] = useState<"light" | "dark">("light")
   const [paletteOpen, setPaletteOpen] = useState(false)
   const [autoRun, setAutoRun] = useState(true)
+  const [selectedTemplate, setSelectedTemplate] = useState<string>("")
   const [editorWidth, setEditorWidth] = useState(50)
   const isDragging = useRef(false)
   const [isResizing, setIsResizing] = useState(false)
@@ -1473,16 +1474,19 @@ ${code.html}
                 <h1 className="text-xl font-bold text-gray-900 dark:text-white">Webify</h1>
               </Link>
 
-              <Select onValueChange={(value) => loadTemplate(templates.find((t) => t.id === value)!)}>
-                <SelectTrigger className="w-48">
+              <Select value={selectedTemplate} onValueChange={(value) => { setSelectedTemplate(value); loadTemplate(templates.find((t) => t.id === value)!) }}>
+                <SelectTrigger className="w-48 [&_[data-description]]:hidden">
                   <SelectValue placeholder="Choose template" />
                 </SelectTrigger>
                 <SelectContent>
                   {templates.map((template) => (
-                    <SelectItem key={template.id} value={template.id}>
+                    <SelectItem key={template.id} value={template.id} textValue={template.name}>
                       <div className="flex items-center gap-2">
-                        <span className="flex items-center shrink-0">{template.icon}</span>
-                        <span>{template.name}</span>
+                        <span className="shrink-0">{template.icon}</span>
+                        <div>
+                          <div className="font-medium">{template.name}</div>
+                          <div data-description className="text-xs text-gray-500">{template.description}</div>
+                        </div>
                       </div>
                     </SelectItem>
                   ))}
