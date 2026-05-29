@@ -206,6 +206,9 @@ export default function CodeEditor() {
   const [paletteOpen, setPaletteOpen] = useState(false)
   const [autoRun, setAutoRun] = useState(true)
   const [splitRatio, setSplitRatio] = useState(50)
+  const [selectedTemplate, setSelectedTemplate] = useState<string>("")
+  const [editorWidth, setEditorWidth] = useState(50)
+  const isDragging = useRef(false)
   const [isResizing, setIsResizing] = useState(false)
 
 
@@ -638,19 +641,18 @@ if (layout === "preview") setLayout("split")
                   <Code2 className="w-5 h-5 text-blue-600" />
                   <span className="text-lg font-bold text-gray-900 dark:text-white hidden sm:block">Webify</span>
                 </Link>
-                <Select onValueChange={(value) => loadTemplate(templates.find((t) => t.id === value)!)}>
-                  <SelectTrigger className="w-36 sm:w-44 md:w-52 h-8 text-xs md:text-sm">
-                    <SelectValue placeholder="Template" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {templates.map((template) => (
-                      <SelectItem key={template.id} value={template.id}>
-                        <div className="flex items-center gap-2">
-                          {template.icon}
-                          <div>
-                            <div className="font-medium text-sm">{template.name}</div>
-                            <div className="text-xs text-gray-500 hidden sm:block">{template.description}</div>
-                          </div>
+              <Select value={selectedTemplate} onValueChange={(value) => { setSelectedTemplate(value); loadTemplate(templates.find((t) => t.id === value)!) }}>
+                <SelectTrigger className="w-48 [&_[data-description]]:hidden">
+                  <SelectValue placeholder="Choose template" />
+                </SelectTrigger>
+                <SelectContent>
+                  {templates.map((template) => (
+                    <SelectItem key={template.id} value={template.id} textValue={template.name}>
+                      <div className="flex items-center gap-2">
+                        <span className="shrink-0">{template.icon}</span>
+                        <div>
+                          <div className="font-medium">{template.name}</div>
+                          <div data-description className="text-xs text-gray-500">{template.description}</div>
                         </div>
                       </SelectItem>
                     ))}
