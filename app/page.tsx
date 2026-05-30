@@ -1036,6 +1036,7 @@ export default function CodeEditor() {
   const [isResizing, setIsResizing] = useState(false)
 const containerRef = useRef<HTMLDivElement>(null)
 const previewRef = useRef<HTMLIFrameElement>(null)
+const initialFormatDone = useRef(false)
 
 const handleMouseDown = () => {
   isDragging.current = true;
@@ -1187,8 +1188,13 @@ const runCodeManually = () => {
     setCode((prev) => ({ ...prev, [language]: value }))
   }
 
+  const formatCode = () => {
+    activeEditorRef.current?.trigger('autoFormat', 'editor.action.formatDocument')
+  }
+
   const loadTemplate = (template: Template) => {
     setCode(template.content)
+    setTimeout(formatCode, 0)
     toast("Template loaded", {
       description: `${template.name} template has been loaded successfully.`,
     });
@@ -1605,7 +1611,13 @@ ${code.html}
             value={code.html}
             onChange={(value) => handleCodeChange("html", value)}
             theme={theme}
-            onEditorReady={(ed) => (activeEditorRef.current = ed)}
+            onEditorReady={(ed) => {
+              activeEditorRef.current = ed
+              if (ed && !initialFormatDone.current) {
+                initialFormatDone.current = true
+                setTimeout(() => ed.trigger('autoFormat', 'editor.action.formatDocument', null), 0)
+              }
+            }}
           />
         </TabsContent>
 
@@ -1615,7 +1627,13 @@ ${code.html}
             value={code.css}
             onChange={(value) => handleCodeChange("css", value)}
             theme={theme}
-            onEditorReady={(ed) => (activeEditorRef.current = ed)}
+            onEditorReady={(ed) => {
+              activeEditorRef.current = ed
+              if (ed && !initialFormatDone.current) {
+                initialFormatDone.current = true
+                setTimeout(() => ed.trigger('autoFormat', 'editor.action.formatDocument', null), 0)
+              }
+            }}
           />
         </TabsContent>
 
@@ -1625,7 +1643,13 @@ ${code.html}
             value={code.javascript}
             onChange={(value) => handleCodeChange("javascript", value)}
             theme={theme}
-            onEditorReady={(ed) => (activeEditorRef.current = ed)}
+            onEditorReady={(ed) => {
+              activeEditorRef.current = ed
+              if (ed && !initialFormatDone.current) {
+                initialFormatDone.current = true
+                setTimeout(() => ed.trigger('autoFormat', 'editor.action.formatDocument', null), 0)
+              }
+            }}
           />
         </TabsContent>
       </div>
